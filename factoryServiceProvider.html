@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Factory service provider</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+  </head>
+    <body ng-app="myApp">
+
+    <div ng-controller="MyCtrl">
+        {{hellos}}
+    </div>
+
+    <div ng-controller="ListController">
+      <ul>
+        <li ng-repeat="fruit in fruits">
+          {{fruit}}
+        </li>
+      </ul>
+    </div>
+      <div ng-controller="AddController">
+        <input type="text" ng-model="newFruit">
+        <input type="button" value="Add" ng-click="addFruit()">
+      </div>
+
+      <div ng-controller="AppCtrl">
+             <div ng-cloak>{{ title }} </div>
+      </div>
+
+<script type="text/javascript">
+var myApp = angular.module('myApp', []);
+
+//<--- Service --->
+//service style, probably the simplest one
+
+myApp.service('helloWorldFromService', function() {
+    this.sayHello = function() {
+        return "It is from Service";
+    };
+});
+
+
+//<--- Factory --->
+//factory style, more involved but more sophisticated
+
+myApp.factory('helloWorldFromFactory', function() {
+    return {
+        sayHello: function() {
+            return "It is form factory";
+        }
+    };
+});
+
+// <--- Provider --->
+//provider style, full blown, configurable version
+
+
+myApp.provider('helloWorld', function() {
+
+    this.name = 'Default';
+
+    this.$get = function() {
+        var name = this.name;
+        return {
+            sayHello: function() {
+                return "Hello, " + name + "!" +"From provider";
+            }
+        }
+    };
+
+    this.setName = function(name) {
+        this.name = name;
+    };
+});
+
+//hey, we can configure a provider!
+
+// It is one of the feature of provider, we can use provider 'helloworld' as 'helloWorldProvider'
+
+myApp.config(function(helloWorldProvider){
+    helloWorldProvider.setName('World');
+});
+
+
+function MyCtrl($scope, helloWorld, helloWorldFromFactory, helloWorldFromService) {
+
+    $scope.hellos = [
+        helloWorld.sayHello(),
+        helloWorldFromFactory.sayHello(),
+        helloWorldFromService.sayHello()];
+}
+
+// myApp.factory("FruitService",function(){
+//  // Data inside the service object
+//   var fruits = ["Apple","Banana","Orange"];
+//   // Methods list() and add()
+//
+//   return {
+//     list: function() {
+//       return fruits;
+//     },
+//     add: function(aFruit) {
+//       fruits.push(aFruit);
+//     }
+//   };
+// });
+  // FruiService contains the list of fruits as data
+  // it exposes 2 methods by returning list & add
+  // We use the factory function to return a service object
+  // This is the most prefered way of creating a service
+
+  // There is an aleternae way to use a constructor funciton()
+
+
+ myApp.controller("ListController",function($scope,FruitService){
+    console.log(FruitService.list())
+    $scope.fruits = FruitService.list(); //ref set
+    console.log($scope.fruits);
+
+  });
+
+  myApp.controller("AddController",function($scope,FruitService){
+    $scope.addFruit = function() {
+      FruitService.add($scope.newFruit);
+      $scope.newFruit = "";
+    }
+  });
+
+
+// Note: Duplicates are not allowed inside the array.
+//  If you want to add duplicates use trakby to set id.
+
+    // myApp.service("FruitService",function(){
+    //   var fruits =["Apple","Banana","Orange"];
+    //   return {
+    //     list: function(){
+    //       return fruits;
+    //     },
+    //     add : function(aFruit) {
+    //       fruits.push(aFruit);
+    //     }
+    //   }
+    // });
+
+             Using service $provide
+        //   myApp.config(function($provide) {
+        //   $provide.factory("game",function(){
+        //     return {
+        //       title: "StarCraft"
+        //     };
+        //   });
+        // });
+
+        // myApp.controller("AppCtrl",function($scope,game){
+        // $scope.title= game.title;
+        // });
+
+
+
+</script>
+  </body>
+</html>

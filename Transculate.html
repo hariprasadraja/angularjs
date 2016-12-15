@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="angular-1.6.0/angular.min.js"></script>
+<script src="Transculateapp.js"></script>
+
+  <meta charset="utf-8">
+  <title>Transculate</title>
+<style>
+  my-card {
+  display: block;
+  border: 1px solid #555;
+  padding: 5px;
+}
+my-card .pic {
+  float: right;
+  max-width: 100px;
+}
+</style>
+</head>
+
+<!-- Source : 'http://teropa.info/blog/2015/06/09/transclusion.html' -->
+<body ng-app="myCards">
+  <my-card my-title="'Ilfracombe'"
+           my-pic="'http://teropa.info/ilfracombe.jpg'">
+           <h2> All the contents present inside this will be available inside the div</h2>
+  </my-card>
+
+  <script type="text/ng-template" id="myCard">
+    <article>
+      <img class="pic" ng-src="{{ctrl.pic}}">
+      <h2>{{ctrl.title}}</h2>
+
+      <div ng-transclude></div>
+    </article>
+
+  
+  </script>
+
+
+</body>
+</html>

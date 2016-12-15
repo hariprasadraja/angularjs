@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>  Provider test </title>
+    <script src="angular.js"></script>
+    <script type="text/javascript">
+        // #### 1 ###
+      // var app = angular.module("app", []);
+      //
+      // app.factory("game", function() {
+      //   return {title: "StarCraft"};
+      // });
+      //
+      // app.controller("AppCtrl", function($scope, game) {
+      //   $scope.title = game.title;
+      // });
+
+   //Let comment the above factory and open this
+
+  //  $provide is a service. we can also use this service as  a provider function.
+  // It is an another way of using factory
+
+//  ### 2 ###
+//    var app = angular.module("app",[]);
+//
+//   app.config(function ($provide) {
+//    $provide.factory("game", function () {
+//     return {
+//       title: "StarCraft"
+//     };
+//   });
+// });
+//
+//
+//
+//     app.controller("AppCtrl", function ($scope, game) {
+//     $scope.title = game.title;
+//     });
+//
+
+
+    // ### 3 ###
+    // var app = angular.module("app",[]);
+    //
+    // app.config(function ($provide) {
+    //   $provide.provider("game", function () {
+    //     return {
+    //       $get: function () {
+    //         return {
+    //           title: "StarCraft"
+    //         };
+    //       }
+    //     };
+    //   });
+    // });
+    //
+    // app.controller("AppCtrl", function ($scope, game) {
+    //   $scope.title = game.title;
+    // });
+
+// This above  function identically to the initial setup. ‘factory’ is simply an alias for this longhand method of declaring a provider which returns an object with a $get method.
+
+
+var app = angular.module("app",[]);
+
+app.provider("game", function () {
+  var type;
+  return {
+    setType: function (value) {
+      type = value;
+    },
+    $get: function () {
+      return {
+        title: type + "Craft"
+      };
+    }
+  };
+});
+
+app.config(function (gameProvider) {
+  gameProvider.setType("War");
+});
+
+app.controller("AppCtrl", function ($scope, game) {
+  $scope.title = game.title;
+});
+
+
+</script>
+
+  </head>
+  <body>
+
+    <div ng-app="app" ng-controller="AppCtrl">
+      {{ title }}
+    </div>
+
+  </body>
+</html>

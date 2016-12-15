@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Intro 1</title>
+    <script src="angular.js"> </script>
+  </head>
+
+  <body ng-app='form'>
+  <form name="form" ng-controller="formcont" ng-submit="submit()">
+
+      <button value="Click me" ng-click="Greet()"> Greet </button>
+      <input type="text" ng-model="change" ng-minlength="4"> </input>
+      <input type="text" name="valid" ng-model="validation" ng-required="true"/>
+
+      <p ng-hide="change"> Enter any text</p>
+      <p ng-show="change"> Yes.</p>
+      <!-- <input type ="text" ng-change="change()"></input> -->
+         <ul>
+           <li ng-repeat='course in courses'>
+             {{course.name}} --> {{course.code}}
+           </li>
+         </ul>
+          inside the parent controller
+         {{name}}
+
+
+
+
+         <h3 ng-if="form.valid.$valid">The input field cannot be empty</h3>
+         <p ng-if='change'> This the para to show  </p>
+
+
+
+
+    <div ng-controller="sub">
+     inside the child controller  {{name}}
+
+     <button type="button" ng-click="call()"> Call </button>
+    </div>
+</form>
+  <script>
+  var app = angular.module("form",[]);
+
+  app.service("square",function(){
+      this.sq = function (x) {
+        return x*x;
+      };
+
+  });
+  app.controller("formcont",function($scope,square) {
+            console.log(square.sq(5));
+
+        $scope.Greet = function(){
+          console.log("button is clicked");
+
+          $scope.$broadcast("event",20);
+
+        };
+
+        $scope.$on("parrent",function(){
+
+              console.log("Parrent is called form the child");
+        });
+
+        //     $scope.change = function() {
+        //    console.log("change is occured");
+        //  };
+         $scope.name = "hariprasad";
+         $scope.submit = function() {
+           console.log("Form is submitted");
+         }
+
+           modify = function() {
+          console.log("modify");
+        }
+
+        $scope.$watch('change',modify);
+
+        $scope.courses = [
+                           {name:"Maths", code:"MAT101"},
+                           {name:"Physics", code:"PHY201"},
+                           {name:"Chemistry", code:"CHE101"} ];
+
+        });
+
+   app.controller("sub",function($scope){
+      $scope.name="Hari prasad"
+
+      $scope.call = function() {
+
+          $scope.$emit("parrent");
+
+      }
+
+      $scope.$on("event",function($event,y) {
+        console.log("Handling event" + y);
+      });
+   });
+  </script>
+  </body>
+</html>
